@@ -120,7 +120,7 @@
             { top: '14%', left: '25%', info: '<strong>Respiratory Health</strong><br>Clear breathing and optimal lung health for active animals.', image: 'respiratory.png' },
             { top: '11%', left: '42%', info: '<strong>Intestinal Health</strong><br>Reduction of acute intestinal absorptive disorders during and recovery from acute diarrhoea.', image: 'intestine.jpg' },
             { top: '15%', left: '63%', info: '<strong>Calming</strong><br>Serenity solutions for stress and anxiety relief across all species.', image: 'calming.jpg' },
-            { top: '32%', left: '78%', info: '<strong>Immunity</strong><br>Boosting the natural defenses of animals with advanced immune support.', image: 'immunity.jpg' },
+            { top: '32%', left: '73%', info: '<strong>Immunity</strong><br>Boosting the natural defenses of animals with advanced immune support.', image: 'immunity.jpg' },
             { top: '52%', left: '78%', info: '<strong>Circulatory</strong><br>Enhancing heart and vascular health for dynamic wellbeing.', image: 'circulatory.jpg' },
             { top: '70%', left: '65%', info: '<strong>Skin Health</strong><br>Nourishing skin and coat to shine from the inside out.', image: 'skinhealth.jpg' },
             { top: '77%', left: '43%', info: '<strong>Joint Health</strong><br>Promoting strength and mobility for lifelong joint wellness in animals.', image: 'joint.jpg' },
@@ -140,7 +140,7 @@
             section.style.left = left;
             section.dataset.info = info;
             section.dataset.image = image;
-
+        
             function showPopup(e) {
                 e.stopPropagation();
                 const sectionRect = e.target.getBoundingClientRect();
@@ -149,14 +149,19 @@
                 const popupHeight = popup.offsetHeight;
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-
+        
                 popup.innerHTML = `<img src="${e.target.dataset.image}" alt="Health Info">
                     <div class="popup-content">${e.target.dataset.info}</div>`;
                 popup.style.display = 'block';
-
+        
                 let popupLeft = sectionRect.left - containerRect.left + 60;
                 let popupTop = sectionRect.top - containerRect.top - 10;
-
+        
+                // Adjusting popup positioning for Calming, Immunity, Circulatory, and Skin Health sections
+                if (e.target.dataset.info.includes("Calming") || e.target.dataset.info.includes("Immunity") || e.target.dataset.info.includes("Circulatory") || e.target.dataset.info.includes("Skin Health")) {
+                    popupLeft = sectionRect.left - containerRect.left - popupWidth - 20; // Adjust to the left side
+                }
+        
                 // Ensure popup stays within screen bounds
                 if (popupLeft + popupWidth > screenWidth - 20) {
                     popupLeft = screenWidth - popupWidth - 20; // Shift left if overflowing
@@ -170,27 +175,33 @@
                 if (popupTop < 10) {
                     popupTop = 10; // Prevent top overflow
                 }
-
+        
                 popup.style.left = `${popupLeft}px`;
                 popup.style.top = `${popupTop}px`;
-
+        
+                // Displaying the arrow
                 arrow.style.display = 'block';
                 arrow.style.top = `${sectionRect.top - containerRect.top + 10}px`;
-                arrow.style.left = `${sectionRect.left - containerRect.left + 40}px`;
+                arrow.style.left = `${sectionRect.left - containerRect.left + 40}px`; // Adjust for right-side arrows
+        
+                // Adjusting the arrow position for left-side popups (for Calming, Immunity, Circulatory, Skin Health)
+                if (e.target.dataset.info.includes("Calming") || e.target.dataset.info.includes("Immunity") || e.target.dataset.info.includes("Circulatory") || e.target.dataset.info.includes("Skin Health")) {
+                    arrow.style.left = `${sectionRect.left - containerRect.left - 10}px`; // Arrow points left
+                }
             }
-
+        
             section.addEventListener('mouseenter', showPopup);
             section.addEventListener('mouseleave', () => {
                 popup.style.display = 'none';
                 arrow.style.display = 'none';
             });
-
+        
             section.addEventListener('click', showPopup);
             section.addEventListener('touchstart', showPopup);
-
+        
             container.appendChild(section);
         });
-
+        
         document.body.addEventListener('click', () => {
             popup.style.display = 'none';
             arrow.style.display = 'none';
