@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,60 +11,110 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: transparent;
+            background: transparent; /* Background is transparent */
             margin: 0;
             font-family: Arial, sans-serif;
         }
+
         .container {
             position: relative;
             width: 90vw;
             max-width: 600px;
+            background: transparent; /* Container is transparent */
         }
+
         img {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 50%;
+            border-radius: 49%;
         }
+
         .health-section {
             position: absolute;
             width: 10vw;
-            max-width: 75px;
+            max-width: 70px;
             height: 10vw;
-            max-height: 75px;
+            max-height: 70px;
             background: transparent;
             cursor: pointer;
-            border-radius: 100%;
+            border-radius: 10%;
         }
+
         .popup {
             display: none;
             position: absolute;
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-size: 14px;
-            width: 250px;
+            font-size: 12px;
+            width: 200px;
             text-align: left;
             white-space: normal;
             z-index: 100;
             word-wrap: break-word;
             max-width: 90vw;
             overflow-wrap: break-word;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 10px;
+            height: 150px;
         }
-        .popup img {
-            width: 40px;
+
+        .popup-header {
+            background-color: white;
+            color: #213185;
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .popup-header .title {
+            flex-grow: 1;
+            padding: 22px 12px;
+        }
+
+        .popup-header .icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: -7px;
+            margin-right: 0px;
+            overflow: hidden;
+        }
+
+        .popup-header .icon img {
+            width: 95%;
             height: auto;
-            border-radius: 8px;
-            margin-right: 10px;
-            display: inline-block;
-            vertical-align: middle;
+            filter: none;
+            border-radius: 0; /* Remove the circular border-radius for popup icons */
         }
+
         .popup-content {
-            display: inline-block;
-            vertical-align: middle;
-            max-width: 180px;
+            padding: 10px;
+            display: flex;
+            align-items: flex-start;
+            min-height: 75px;
         }
+
+        .popup-text {
+            display: inline-block;
+            vertical-align: top;
+            max-width: 230px;
+            color: #374857;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Arrow Styles */
         .arrow {
             display: none;
             position: absolute;
@@ -73,79 +124,105 @@
             border-width: 10px;
             border-color: transparent transparent white transparent;
         }
+
+        .arrow.left {
+            border-color: transparent white transparent transparent;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <img src="transformx.jpg" alt="Pet Health">
-        <div class="popup" id="popup"></div>
+        <div class="popup" id="popup">
+            <div class="popup-header" id="popup-header"></div>
+            <div class="popup-content" id="popup-content"></div>
+        </div>
         <div class="arrow" id="arrow"></div>
     </div>
     <script>
         const sectionsData = [
-            { top: '14%', left: '25%', info: '<strong>Respiratory Health</strong><br>Clear breathing and optimal lung health for active animals.', image: 'respiratory.png' },
-            { top: '11%', left: '42%', info: '<strong>Intestinal Health</strong><br>Reduction of acute intestinal absorptive disorders during and recovery from acute diarrhoea.', image: 'intestine.jpg', align:'left' },
-            { top: '70%', left: '23%', info: '<strong>Urinary & Renal Health</strong><br>Supporting urinary function and kidney vitality through tailored nutrition for animals.', image: 'urinal_renal.jpg' },
-            { top: '52%', left: '10%', info: '<strong>Recovery</strong><br>Optimised solutions for speedy recovery and robust health post-treatment.', image: 'recovery.png' },
-            { top: '33%', left: '10%', info: '<strong>Oral Health</strong><br>Ensuring fresher breath and healthier teeth.', image: 'oral.jpg' },
-            { top: '15%', left: '63%', info: '<strong>Calming</strong><br>Serenity solutions for stress and anxiety relief across all species.', image: 'calming.jpg', align: 'left' },
-            { top: '32%', left: '73%', info: '<strong>Immunity</strong><br>Boosting the natural defenses of animals with advanced immune support.', image: 'immunity.jpg', align: 'left' },
-            { top: '52%', left: '78%', info: '<strong>Circulatory</strong><br>Enhancing heart and vascular health for dynamic wellbeing.', image: 'circulatory.jpg', align: 'left' },
-            { top: '70%', left: '65%', info:  '<strong>Skin Health</strong><br>Nourishing skin and coat to shine from the inside out.', image: 'skinhealth.jpg', align: 'left' },
-            { top: '77%', left: '43%', info: '<strong>Joint Health</strong><br>Promoting strength and mobility for lifelong joint wellness in animals.', image: 'joint.jpg' },
+            { top: '14%', left: '25%', title: 'Respiratory Health', info: 'Clear breathing and optimal lung health for active animals.', headerIcon: 'images/RESPIRATORY.png' },
+            { top: '11%', left: '42%', title: 'Intestinal Health', info: 'Reduction of acute intestinal absorptive disorders during and recovery from acute diarrhoea.', headerIcon: 'images/INTESTINAL_HEALTH.png', align: 'left' },
+            { top: '70%', left: '23%', title: 'Urinary & Renal Health', info: 'Supporting urinary function and kidney vitality through tailored nutrition for animals.', headerIcon: 'images/URINARY_RENAL.png' },
+            { top: '52%', left: '10%', title: 'Recovery', info: 'Optimised solutions for speedy recovery and robust health post-treatment.', headerIcon: 'images/RECOVERY.png' },
+            { top: '33%', left: '10%', title: 'Oral Health', info: 'Ensuring fresher breath and healthier teeth.', headerIcon: 'images/ORAL_HEALTH.png' },
+            { top: '15%', left: '63%', title: 'Calming', info: 'Serenity solutions for stress and anxiety relief across all species.', headerIcon: 'images/CALMING.png', align: 'left' },
+            { top: '32%', left: '73%', title: 'Immunity', info: 'Boosting the natural defenses of animals with advanced immune support.', headerIcon: 'images/IMMUNITY.png', align: 'left' },
+            { top: '52%', left: '78%', title: 'Circulatory', info: 'Enhancing heart and vascular health for dynamic wellbeing.', headerIcon: 'images/CIRCULATORY.png', align: 'left' },
+            { top: '70%', left: '65%', title: 'Skin Health', info: 'Nourishing skin and coat to shine from the inside out.', headerIcon: 'images/SKIN_HEALTH.png', align: 'left' },
+            { top: '77%', left: '43%', title: 'Joint Health', info: 'Promoting strength and mobility for lifelong joint wellness in animals.', headerIcon: 'images/JOINT_HEALTH.png' },
         ];
 
         const container = document.querySelector('.container');
         const popup = document.getElementById('popup');
+        const popupHeader = document.getElementById('popup-header');
+        const popupContent = document.getElementById('popup-content');
         const arrow = document.getElementById('arrow');
 
-        sectionsData.forEach(({ top, left, info, image, align }) => {
+        sectionsData.forEach(({ top, left, title, info, align, headerIcon }) => {
             const section = document.createElement('div');
             section.classList.add('health-section');
             section.style.top = top;
             section.style.left = left;
+            section.dataset.title = title;
             section.dataset.info = info;
-            section.dataset.image = image;
-            section.dataset.align = align || 'right';
-        
+            section.dataset.align = align;
+            section.dataset.headerIcon = headerIcon;
+
             function showPopup(e) {
                 e.stopPropagation();
                 const sectionRect = e.target.getBoundingClientRect();
                 const containerRect = container.getBoundingClientRect();
-                popup.innerHTML = `<img src="${e.target.dataset.image}" alt="Health Info">
-                    <div class="popup-content">${e.target.dataset.info}</div>`;
+
+                const titleText = e.target.dataset.title;
+                const headerIconURL = e.target.dataset.headerIcon;
+
+                popupHeader.innerHTML = `
+                    <div class="title">${titleText}</div>
+                    <div class="icon"><img src="${headerIconURL}" alt="Icon"></div>
+                `;
+
+                popupContent.innerHTML = '<div class="popup-text">' + e.target.dataset.info + '</div>';
                 popup.style.display = 'block';
-        
+
                 let popupLeft;
                 if (e.target.dataset.align === 'left') {
                     popupLeft = sectionRect.left - containerRect.left - popup.offsetWidth - 10;
+                    arrow.classList.add('left');
+                    arrow.classList.remove('right');
                 } else {
                     popupLeft = sectionRect.left - containerRect.left + 60;
+                    arrow.classList.add('right');
+                    arrow.classList.remove('left');
                 }
-        
+
                 let popupTop = sectionRect.top - containerRect.top - 10;
-        
-                popup.style.left = `${popupLeft}px`;
-                popup.style.top = `${popupTop}px`;
-        
+
+                popup.style.left = popupLeft + 'px';
+                popup.style.top = popupTop + 'px';
+
                 arrow.style.display = 'block';
-                arrow.style.top = `${sectionRect.top - containerRect.top + 10}px`;
-        
+                arrow.style.top = (sectionRect.top - containerRect.top + (sectionRect.height / 2) - 10) + 'px';
+
                 if (e.target.dataset.align === 'left') {
-                    arrow.style.left = `${popupLeft + popup.offsetWidth}px`;
+                    arrow.style.left = (popupLeft + popup.offsetWidth - 10) + 'px';
+                    arrow.classList.add('left');
                 } else {
-                    arrow.style.left = `${popupLeft - 10}px`;
+                    arrow.style.left = (popupLeft - 10) + 'px';
+                    arrow.classList.remove('left');
                 }
             }
-        
+
             section.addEventListener('mouseenter', showPopup);
             section.addEventListener('mouseleave', () => {
                 popup.style.display = 'none';
                 arrow.style.display = 'none';
             });
-        
+
             container.appendChild(section);
-        });        
+        });
     </script>
 </body>
+
 </html>
